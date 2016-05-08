@@ -1129,7 +1129,7 @@ end_scene""" % (render_params.antialiasing,
         box_min, box_max = self._rescale_for_frame_aspect_ratio_and_zoom(s, frame_aspect_ratio, zoom)
         a_min, a_max = self._box_for_aspect_ratio(aspect_ratio, box_min, box_max)
         return self._transform_to_bounding_box(box_min, box_max, a_min, a_max, frame=frame,
-                                               axes=axes, axes_labels=axes_labels, label_opts=label_opts, thickness=1,
+                                               axes=axes, axes_labels=axes_labels, label_opts=label_opts, thickness=1.5,
                                                labels = True)   # jmol labels are implemented
 
     def _prepare_for_tachyon(self, frame, axes, frame_aspect_ratio, aspect_ratio, zoom):
@@ -1211,9 +1211,9 @@ end_scene""" % (render_params.antialiasing,
                 xmin, ymin, zmin = xyz_min
                 xmax, ymax, zmax = xyz_max
 
-                F += text3d(xlbl, ((xmax - xmin) if xmin >= 0 else (xmax + xmin), ymin - 2, zmin), frame=False, **label_opts)
-                F += text3d(ylbl, (xmax + 2, (ymax - ymin) if ymin >= 0 else (ymax + ymin), zmin), frame=False, **label_opts)
-                F += text3d(zlbl, (xmin, ymin - 1, (zmax - zmin) if zmin >= 0 else (zmax + zmin)), frame=False, **label_opts)
+                F += text3d(xlbl, ((xmax - xmin) if xmin >= 0 else (xmax + xmin), ymin - 2, zmin - 0.5), frame=False, **label_opts)
+                F += text3d(ylbl, (xmax + 2, (ymax - ymin) if ymin >= 0 else (ymax + ymin), zmin - 0.5), frame=False, **label_opts)
+                F += text3d(zlbl, (xmin - 2, ymin - 1, (zmax - zmin) if zmin >= 0 else (zmax + zmin)), frame=False, **label_opts)
 
             if labels:
                 F += frame_labels(xyz_min, xyz_max, a_min_orig, a_max_orig)
