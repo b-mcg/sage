@@ -9,6 +9,27 @@ EXAMPLES::
     sage: P = plot3d(f,(-3,3),(-3,3), adaptive=True, color=rainbow(60, 'rgbtuple'), max_bend=.1, max_depth=15)
     sage: P.show()
 
+To label axes::
+
+    sage: plot3d(x^2 - y^2, (x, -5, 5), (y, -5, 5), label3d=True)
+    Graphics3d Object
+
+By default 3D axes labels are 'X', 'Y', 'Z'.
+To change 3D axes labels::
+
+    sage: plot3d(x^2 - y^2, (x, -5, 5), (y, -5, 5), label3d=True, axes_labels=['X-label', 'Y-label', 'Z-label'])
+    Graphics3d Object
+
+Customize 3D axes labels (any valid text3d options are valid options for label_opts)::
+
+    sage: plot3d(x^2 - y^2, (x, -5, 5), (y, -5, 5), label3d=True, label_opts={'color':'red'})
+    Graphics3d Object
+    sage: plot3d(x^2 - y^2, (x, -5, 5), (y, -5, 5), label3d=True, axes_labels=['X-label', 'Y-label', 'Z-label'], label_opts={'color':'green'})
+    Graphics3d Object
+
+Anything inheriting from the Graphics3d class supports 3D axes labels, however 3D labels are ignored for all viewers other than Jmol
+because tachyon doesn't support text3d yet and canvas3d already adds its own labels.
+
 .. PLOT::
     
     def f(x,y): return math.sin(y*y+x*x)/math.sqrt(x*x+y*y+.0001)
