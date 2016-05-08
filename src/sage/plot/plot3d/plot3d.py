@@ -28,7 +28,7 @@ Customize 3D axes labels (any valid text3d options are valid options for label_o
     Graphics3d Object
 
 Anything inheriting from the Graphics3d class supports 3D axes labels, however 3D labels are ignored for all viewers other than Jmol
-because tachyon doesn't support text3d yet and canvas3d already adds its own labels.
+because tachyon doesn't support text3d yet and canvas3d uses tachyon under the hood for building the scene.
 
 .. PLOT::
     

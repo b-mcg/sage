@@ -240,9 +240,17 @@ cdef class Graphics3d(SageObject):
         preview_png   = os.path.join(root_dir, 'preview.png')
         opts = self._process_viewing_options(kwds)
         zoom = opts['zoom']
+        # If they want 3d axes labels set a default that they'll be unlikely to change
+        # in order to save the user some typing, otherwise allow the option to customize
+        label3d     = opts.setdefault('label3d', False)
+        axes_labels = opts.setdefault('axes_labels', ['X', 'Y', 'Z']) if label3d else None
+        # also allow more customization with a dict of kwd options to pass to text3d
+        label_opts  = opts.setdefault('label_opts', {})
         T = self._prepare_for_jmol(
             opts['frame'],
             opts['axes'],
+            axes_labels,
+            label_opts,
             opts['frame_aspect_ratio'],
             opts['aspect_ratio'],
             zoom,
@@ -1112,7 +1120,7 @@ end_scene""" % (render_params.antialiasing,
         box_min = tuple([-w*zoom for w in box_max])
         return box_min, box_max
 
-    def _prepare_for_jmol(self, frame, axes, frame_aspect_ratio, aspect_ratio, zoom):
+    def _prepare_for_jmol(self, frame, axes, axes_labels, label_opts, frame_aspect_ratio, aspect_ratio, zoom):
         from sage.plot.plot import EMBEDDED_MODE
         if EMBEDDED_MODE:
             s = 6
@@ -1121,14 +1129,14 @@ end_scene""" % (render_params.antialiasing,
         box_min, box_max = self._rescale_for_frame_aspect_ratio_and_zoom(s, frame_aspect_ratio, zoom)
         a_min, a_max = self._box_for_aspect_ratio(aspect_ratio, box_min, box_max)
         return self._transform_to_bounding_box(box_min, box_max, a_min, a_max, frame=frame,
-                                               axes=axes, thickness=1,
+                                               axes=axes, axes_labels=axes_labels, label_opts=label_opts, thickness=1,
                                                labels = True)   # jmol labels are implemented
 
     def _prepare_for_tachyon(self, frame, axes, frame_aspect_ratio, aspect_ratio, zoom):
         box_min, box_max = self._rescale_for_frame_aspect_ratio_and_zoom(1.0, frame_aspect_ratio, zoom)
         a_min, a_max = self._box_for_aspect_ratio(aspect_ratio, box_min, box_max)
         return self._transform_to_bounding_box(box_min, box_max, a_min, a_max,
-                                               frame=frame, axes=axes, thickness=.75,
+                                               frame=frame, axes=axes, axes_labels=None, label_opts={}, thickness=.75,
                                                labels = False)  # no tachyon text implemented yet
 
     def _box_for_aspect_ratio(self, aspect_ratio, box_min, box_max):
@@ -1180,7 +1188,7 @@ end_scene""" % (render_params.antialiasing,
 
         return a_min, a_max
 
-    def _transform_to_bounding_box(self, xyz_min, xyz_max, a_min, a_max, frame, axes, thickness, labels):
+    def _transform_to_bounding_box(self, xyz_min, xyz_max, a_min, a_max, frame, axes, thickness, labels, axes_labels, label_opts):
 
         a_min_orig = a_min; a_max_orig = a_max
 
@@ -1197,6 +1205,16 @@ end_scene""" % (render_params.antialiasing,
         if frame:
             from shapes2 import frame3d, frame_labels
             F = frame3d(xyz_min, xyz_max, opacity=0.5, color=(0,0,0), thickness=thickness)
+            if axes_labels and not axes:
+                from shapes2 import text3d
+                xlbl, ylbl, zlbl = axes_labels
+                xmin, ymin, zmin = xyz_min
+                xmax, ymax, zmax = xyz_max
+
+                F += text3d(xlbl, ((xmax - xmin) if xmin >= 0 else (xmax + xmin), ymin - 2, zmin), frame=False, **label_opts)
+                F += text3d(ylbl, (xmax + 2, (ymax - ymin) if ymin >= 0 else (ymax + ymin), zmin), frame=False, **label_opts)
+                F += text3d(zlbl, (xmin, ymin - 1, (zmax - zmin) if zmin >= 0 else (zmax + zmin)), frame=False, **label_opts)
+
             if labels:
                 F += frame_labels(xyz_min, xyz_max, a_min_orig, a_max_orig)
 
