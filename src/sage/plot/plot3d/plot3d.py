@@ -3,10 +3,12 @@ Plotting Functions
 
 EXAMPLES::
 
+    sage: var('x, y')
+    (x, y)
     sage: def f(x,y):
     ...       return math.sin(y*y+x*x)/math.sqrt(x*x+y*y+.0001)
     ...
-    sage: P = plot3d(f,(-3,3),(-3,3), adaptive=True, color=rainbow(60, 'rgbtuple'), max_bend=.1, max_depth=15)
+    sage: P = plot3d(f,(x,-3,3),(y,-3,3), adaptive=True, color=rainbow(60, 'rgbtuple'), max_bend=.1, max_depth=15)
     sage: P.show()
 
 To label axes::
@@ -33,7 +35,7 @@ because tachyon doesn't support text3d yet and canvas3d uses tachyon under the h
 .. PLOT::
     
     def f(x,y): return math.sin(y*y+x*x)/math.sqrt(x*x+y*y+.0001)
-    P = plot3d(f,(-3,3),(-3,3), adaptive=True, color=rainbow(60, 'rgbtuple'), max_bend=.1, max_depth=15)
+    P = plot3d(f,(x,-3,3),(y,-3,3), adaptive=True, color=rainbow(60, 'rgbtuple'), max_bend=.1, max_depth=15)
     sphinx_plot(P)
     
 ::
@@ -41,7 +43,7 @@ because tachyon doesn't support text3d yet and canvas3d uses tachyon under the h
     sage: def f(x,y):
     ...       return math.exp(x/5)*math.sin(y)
     ...
-    sage: P = plot3d(f,(-5,5),(-5,5), adaptive=True, color=['red','yellow'])
+    sage: P = plot3d(f,(x,-5,5),(y,-5,5), adaptive=True, color=['red','yellow'])
     sage: from sage.plot.plot3d.plot3d import axes
     sage: S = P + axes(6, color='black')
     sage: S.show()
@@ -49,7 +51,7 @@ because tachyon doesn't support text3d yet and canvas3d uses tachyon under the h
 .. PLOT::
     
     def f(x,y): return math.exp(x/5)*math.sin(y)
-    P = plot3d(f,(-5,5),(-5,5), adaptive=True, color=['red','yellow'])
+    P = plot3d(f,(x,-5,5),(y,-5,5), adaptive=True, color=['red','yellow'])
     from sage.plot.plot3d.plot3d import axes
     S = P + axes(6, color='black')
     sphinx_plot(S)
@@ -69,7 +71,7 @@ We plot "cape man"::
     sage: S += sphere((.45, .1,.15),size=.1, color='white') + sphere((.51, .1,.17), size=.05, color='black')
     sage: S += sphere((.5,0,-.2),size=.1, color='yellow')
     sage: def f(x,y): return math.exp(x/5)*math.cos(y)
-    sage: P = plot3d(f,(-5,5),(-5,5), adaptive=True, color=['red','yellow'], max_depth=10)
+    sage: P = plot3d(f,(x,-5,5),(y,-5,5), adaptive=True, color=['red','yellow'], max_depth=10)
     sage: cape_man = P.scale(.2) + S.translate(1,0,0)
     sage: cape_man.show(aspect_ratio=[1,1,1])
 
@@ -82,19 +84,19 @@ We plot "cape man"::
     S += sphere((.45, .1,.15),size=.1, color='white') + sphere((.51, .1,.17), size=.05, color='black')
     S += sphere((.5,0,-.2),size=.1, color='yellow')
     def f(x,y): return math.exp(x/5)*math.cos(y)
-    P = plot3d(f,(-5,5),(-5,5), adaptive=True, color=['red','yellow'], max_depth=10)
+    P = plot3d(f,(x,-5,5),(y,-5,5), adaptive=True, color=['red','yellow'], max_depth=10)
     cape_man = P.scale(.2) + S.translate(1,0,0)
     cape_man.aspect_ratio([1,1,1])
     sphinx_plot(cape_man)
     
 Or, we plot a very simple function indeed::
 
-    sage: plot3d(pi, (-1,1), (-1,1))
+    sage: plot3d(pi, (x,-1,1), (y,-1,1))
     Graphics3d Object
 
 .. PLOT::
     
-    sphinx_plot(plot3d(pi, (-1,1), (-1,1)))
+    sphinx_plot(plot3d(pi, (x,-1,1), (y,-1,1)))
     
 AUTHORS:
 
